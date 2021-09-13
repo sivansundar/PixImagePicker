@@ -35,6 +35,9 @@ class FragmentSample : AppCompatActivity() {
     }
 
     private fun showCameraFragment() {
+
+        //val customView = getCustomView()
+
         addPixToActivity(R.id.container, options) {
             when (it.status) {
                 PixEventCallback.Status.SUCCESS -> {
@@ -50,6 +53,10 @@ class FragmentSample : AppCompatActivity() {
             }
 
         }
+    }
+
+    private fun getCustomView(): View? {
+        return layoutInflater.inflate(R.layout.custom_view, findViewById(R.id.container))
     }
 
     private fun showResultsFragment() {

@@ -32,13 +32,18 @@ import io.ak1.pix.utility.CustomItemTouchListener
 import kotlinx.coroutines.*
 import java.lang.Runnable
 import kotlin.coroutines.cancellation.CancellationException
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+
 
 /**
  * Created By Akshay Sharma on 17,June,2021
  * https://ak1.io
  */
 
-class PixFragment(private val resultCallback: ((PixEventCallback.Results) -> Unit)? = null) :
+class PixFragment(
+    private val resultCallback: ((PixEventCallback.Results) -> Unit)? = null,
+    private val customView: View? = null) :
     Fragment(), View.OnTouchListener {
 
     private val model: PixViewModel by viewModels()
@@ -103,7 +108,23 @@ class PixFragment(private val resultCallback: ((PixEventCallback.Results) -> Uni
         savedInstanceState: Bundle?,
     ) = run {
         _binding = FragmentPixBinding.inflate(inflater, container, false)
+        //AddView
+        Log.d("Pix", "onCreateView called")
+
+        addCustomView()
+
         binding.root
+    }
+
+    private fun addCustomView() {
+
+
+        if (customView != null) {
+            binding.customContainer.customContainer.addView(customView)
+            Log.d("Pix", "Custom view is not null")
+        } else {
+            Log.d("Pix", "Custom view is null")
+        }
     }
 
 

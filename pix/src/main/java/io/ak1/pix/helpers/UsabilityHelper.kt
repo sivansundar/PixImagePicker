@@ -3,6 +3,7 @@ package io.ak1.pix.helpers
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
@@ -88,10 +89,24 @@ fun AppCompatActivity.addPixToActivity(
 
 fun pixFragment(
     options: Options,
+    view: View? = null,
     resultCallback: ((PixEventCallback.Results) -> Unit)? = null
 ): PixFragment {
 
-    return PixFragment(resultCallback).apply {
+    return PixFragment(resultCallback, view).apply {
+        arguments = Bundle().apply {
+            putParcelable(ARG_PARAM_PIX, options)
+        }
+    }
+}
+
+fun pixTanyaFragment(
+    options: Options,
+    resultCallback: ((PixEventCallback.Results) -> Unit)? = null,
+    view : View
+): PixFragment {
+
+    return PixFragment(resultCallback, view).apply {
         arguments = Bundle().apply {
             putParcelable(ARG_PARAM_PIX, options)
         }

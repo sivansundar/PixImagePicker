@@ -1,10 +1,13 @@
 package io.ak1.pixsample.samples
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -27,19 +30,43 @@ import io.ak1.pixsample.options
 class ViewPager2Sample : AppCompatActivity() {
     private val iconWidth = 150
     private lateinit var binding: ActivityViewPager2SampleBinding
-    private val pixFragment = pixFragment(options)
     private val viewPagerResultsFragment = ViewPagerResultsFragment()
-    var fragmentList = ArrayList<Fragment>().apply {
-        add(pixFragment)
-        add(viewPagerResultsFragment)
-        add(SampleFragment())
-        add(SampleFragment())
+
+    var fragmentList = ArrayList<Fragment>()
+
+    private fun getCustomView(): View? {
+        val layout = layoutInflater.inflate(R.layout.custom_view, findViewById(R.id.mainRoot), false)
+//        val textView = TextView(this)
+//        textView.text = "Hello"
+//        textView.setBackgroundColor(Color.RED)
+
+
+        val params = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            50
+        )
+
+      val frameLayout = FrameLayout(this)
+
+        layout.setBackgroundColor(Color.RED)
+        layout.layoutParams = params
+        return layout
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityViewPager2SampleBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val pixFragment = pixFragment(options, getCustomView())
+
+        fragmentList.apply {
+            add(pixFragment)
+            add(viewPagerResultsFragment)
+            add(SampleFragment())
+            add(SampleFragment())
+        }
+
         setupScreen()
         binding.tabLayout.apply {
             addTab(this.newTab().setIcon(R.drawable.ic_camera))
