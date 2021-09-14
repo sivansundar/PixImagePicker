@@ -2,8 +2,10 @@ package io.ak1.pix.helpers
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.opengl.Visibility
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -11,10 +13,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import io.ak1.pix.databinding.FragmentPixBinding
-import io.ak1.pix.models.Flash
-import io.ak1.pix.models.Mode
-import io.ak1.pix.models.Options
-import io.ak1.pix.models.Ratio
+import io.ak1.pix.models.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -65,6 +64,13 @@ class CameraXManager(
         val metrics = DisplayMetrics().also { display.getRealMetrics(it) }
         Log.d(TAG, "Screen metrics: ${metrics.widthPixels} x ${metrics.heightPixels}")
 
+        //Hide and Show gallery recycler view at the bottom
+        when (options.takePictureFrom) {
+            TakePictureFrom.ONLY_CAMERA -> binding.gridLayout.bottomSheet.visibility = View.GONE
+            TakePictureFrom.CAMERA_WITH_GALLERY -> binding.gridLayout.bottomSheet.visibility = View.VISIBLE
+        }
+        Log.d(TAG, "takePictureFrom: ${options.takePictureFrom}")
+
         val screenAspectRatio = when (options.ratio) {
             Ratio.RATIO_AUTO -> aspectRatio(metrics.widthPixels, metrics.heightPixels)
             Ratio.RATIO_4_3 -> AspectRatio.RATIO_4_3
@@ -73,7 +79,6 @@ class CameraXManager(
         Log.d(TAG, "Preview aspect ratio: $screenAspectRatio")
 
         val rotation = previewView.display.rotation
-
 
         // CameraProvider
         val cameraProvider = cameraProvider
@@ -97,6 +102,14 @@ class CameraXManager(
             .setTargetRotation(rotation)
             .build()
         useCases.add(preview!!)
+
+        //Disable flash
+        when(options.showFlash) {
+            true -> binding.gridLayout.controlsLayout.flashButton.visibility = View.VISIBLE
+            false -> binding.gridLayout.controlsLayout.flashButton.visibility = View.GONE
+        }
+
+
         // ImageCapture
         when (options.mode) {
             Mode.Picture -> {
@@ -159,6 +172,14 @@ class CameraXManager(
             }
         }
 
+        /**
+         * Add a field to Options Model -> Show Gallery BottomSheet
+         *
+         * Define a when block to handle cases for GALLERY and ONLY WITH CAMERA
+         *
+         * ONLY WITH CAMERA ->
+         *          find bottomsheet gallery and hide view
+         * */
 
         // Must unbind the use-cases before rebinding them
         cameraProvider.unbindAll()

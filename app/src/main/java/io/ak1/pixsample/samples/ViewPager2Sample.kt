@@ -15,6 +15,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import io.ak1.pix.helpers.*
+import io.ak1.pix.models.Mode
+import io.ak1.pix.models.TakePictureFrom
 import io.ak1.pix.utility.WIDTH
 import io.ak1.pixsample.R
 import io.ak1.pixsample.commons.Adapter
@@ -58,7 +60,11 @@ class ViewPager2Sample : AppCompatActivity() {
         binding = ActivityViewPager2SampleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val pixFragment = pixFragment(options, getCustomView())
+        val pixFragment = pixFragment(
+            options.apply {
+                  takePictureFrom = TakePictureFrom.ONLY_CAMERA
+                  showFlash = false
+        }, getCustomView())
 
         fragmentList.apply {
             add(pixFragment)
