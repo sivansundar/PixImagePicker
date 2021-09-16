@@ -111,6 +111,7 @@ class PixFragment(
         //AddView
         Log.d("Pix", "onCreateView called")
 
+
         addCustomView()
 
         binding.root
@@ -131,7 +132,10 @@ class PixFragment(
     @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("Pix", "onViewCreated")
         requireActivity().setup()
+        showGallery(true)
+
     }
 
     private fun FragmentActivity.setup() {
@@ -175,6 +179,7 @@ class PixFragment(
         binding.gridLayout.gridLayout.show()
         cameraXManager = CameraXManager(binding.viewFinder, context, options).also {
             it.startCamera()
+
         }
         setupAdapters(context)
         setupFastScroller(context)
@@ -184,6 +189,19 @@ class PixFragment(
         setupControls()
         backPressController()
 
+    }
+
+    fun showGallery(state : Boolean) {
+        when(state){
+            true -> {
+                mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+                showGalleryFull()
+            }
+            false -> {
+                mBottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                hideGalleryFull()
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -372,8 +390,18 @@ class PixFragment(
     }
 
 
+    fun showGalleryFull() {
+
+    }
+
+    fun hideGalleryFull() {
+
+
+    }
+
     private fun setBottomSheetBehavior() {
         mBottomSheetBehavior = BottomSheetBehavior.from(binding.gridLayout.bottomSheet)
+
         requireActivity().setup(binding, mBottomSheetBehavior) {
             if (it) {
                 showScrollbar(binding.gridLayout.fastscrollScrollbar, requireContext())
@@ -381,6 +409,7 @@ class PixFragment(
                 mViewHeight = binding.gridLayout.fastscrollScrollbar.measuredHeight.toFloat()
                 handler.post { binding.setViewPositions(getScrollProportion(binding.gridLayout.recyclerView)) }
                 binding.gridLayout.sendButtonStateAnimation(show = false, withAnim = false)
+
             } else {
                 instantImageAdapter.notifyDataSetChanged()
                 binding.gridLayout.fastscrollScrollbar.hide()

@@ -62,9 +62,13 @@ class ViewPager2Sample : AppCompatActivity() {
 
         val pixFragment = pixFragment(
             options.apply {
-                  takePictureFrom = TakePictureFrom.ONLY_CAMERA
+                  takePictureFrom = TakePictureFrom.CAMERA_WITH_GALLERY
                   showFlash = false
-        }, getCustomView())
+        }, getCustomView()){
+
+        }
+
+
 
         fragmentList.apply {
             add(pixFragment)
@@ -72,6 +76,9 @@ class ViewPager2Sample : AppCompatActivity() {
             add(SampleFragment())
             add(SampleFragment())
         }
+
+//        pixFragment.showGallery(true)
+
 
         setupScreen()
         binding.tabLayout.apply {

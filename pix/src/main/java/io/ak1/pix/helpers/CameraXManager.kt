@@ -12,6 +12,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.ak1.pix.databinding.FragmentPixBinding
 import io.ak1.pix.models.*
 import java.io.File
@@ -43,7 +44,7 @@ class CameraXManager(
     // Select back camera as a default
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-
+    lateinit var fragmentPixBinding: FragmentPixBinding
     /** Initialize CameraX, and prepare to bind the camera use cases  */
     fun setUpCamera(binding: FragmentPixBinding) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireActivity)
@@ -54,6 +55,16 @@ class CameraXManager(
             bindCameraUseCases(binding)
         }, ContextCompat.getMainExecutor(requireActivity))
     }
+
+    fun showGallery(state: Boolean) {
+        when(state) {
+            true -> fragmentPixBinding.gridLayout.bottomSheet.visibility = View.GONE
+
+            false -> fragmentPixBinding.gridLayout.bottomSheet.visibility = View.VISIBLE
+
+        }
+    }
+
 
     /** Declare and bind preview, capture and analysis use cases */
     fun bindCameraUseCases(binding: FragmentPixBinding) {

@@ -9,4 +9,6 @@
     android:layout_height="50dp"
     android:background="@color/video_counter_color_pix">
 
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
